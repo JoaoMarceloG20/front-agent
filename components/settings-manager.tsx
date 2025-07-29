@@ -60,9 +60,9 @@ interface SystemSettings {
 
 const defaultSettings: SystemSettings = {
   general: {
-    systemName: "Sistema de Documentos - Prefeitura",
-    organizationName: "Prefeitura Municipal",
-    description: "Sistema de busca semântica para documentos oficiais municipais",
+    systemName: "Sistema de Documentos - Câmara",
+    organizationName: "Câmara de Vereadores",
+    description: "Sistema de busca semântica para documentos oficiais da câmara municipal",
     timezone: "America/Sao_Paulo",
     language: "pt-BR",
     dateFormat: "DD/MM/YYYY",

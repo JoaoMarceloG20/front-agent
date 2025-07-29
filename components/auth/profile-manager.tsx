@@ -44,9 +44,9 @@ interface UserProfile {
 const mockUser: UserProfile = {
   id: 1,
   name: "João Silva",
-  email: "joao.silva@prefeitura.gov.br",
+  email: "joao.silva@camara.gov.br",
   phone: "(11) 99999-9999",
-  department: "Secretaria de Administração",
+  department: "Secretaria Legislativa",
   role: "admin",
   status: "active",
   createdAt: "2023-06-01T09:00:00",

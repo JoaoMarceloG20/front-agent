@@ -1,4 +1,4 @@
-import type { Config } from "tailwindcss"
+import type { Config } from "tailwindcss";
 
 const config = {
   darkMode: ["class"],
@@ -55,9 +55,9 @@ const config = {
         },
         // Custom prefeitura colors
         institutional: {
-          blue: "#1e40af",
-          green: "#059669",
-          red: "#dc2626",
+          blue: "hsl(var(--institutional-blue))",
+          green: "hsl(var(--institutional-green))",
+          red: "hsl(var(--institutional-red))",
         },
       },
       borderRadius: {
@@ -82,6 +82,6 @@ const config = {
     },
   },
   plugins: [require("tailwindcss-animate")],
-} satisfies Config
+} satisfies Config;
 
-export default config
+export default config;

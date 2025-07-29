@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { Bell, User, Menu } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { Bell, User, Menu, LogOut } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,75 +9,90 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Badge } from "@/components/ui/badge"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { BarChart3, FileText, Search, Settings, Users, Building2, MessageSquare, Upload } from "lucide-react"
-import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
+} from "@/components/ui/dropdown-menu";
+import { Badge } from "@/components/ui/badge";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  BarChart3,
+  FileText,
+  Search,
+  Settings,
+  Users,
+  Building2,
+  MessageSquare,
+  Upload,
+} from "lucide-react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useAuth, useRole } from "@/lib/providers/auth-provider";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const menuItems = [
   {
     title: "Dashboard",
-    url: "/",
+    url: "/" as const,
     icon: BarChart3,
   },
   {
     title: "Busca de Documentos",
-    url: "/busca",
+    url: "/busca" as const,
     icon: Search,
   },
   {
     title: "Documentos",
-    url: "/documentos",
+    url: "/documentos" as const,
     icon: FileText,
   },
   {
     title: "Chat IA",
-    url: "/chat",
+    url: "/chat" as const,
     icon: MessageSquare,
   },
   {
     title: "Upload",
-    url: "/upload",
+    url: "/upload" as const,
     icon: Upload,
   },
-]
+];
 
 const adminItems = [
   {
     title: "Usuários",
-    url: "/usuarios",
+    url: "/usuarios" as const,
     icon: Users,
   },
   {
     title: "Configurações",
-    url: "/configuracoes",
+    url: "/configuracoes" as const,
     icon: Settings,
   },
-]
+];
 
 export function Header() {
-  const pathname = usePathname()
-  const router = useRouter()
+  const pathname = usePathname();
+  const router = useRouter();
+  const { user, logout } = useAuth();
+  const { isAdmin } = useRole();
 
-  const handleLogout = () => {
-    // Limpar dados de sessão/localStorage se houver
-    localStorage.removeItem("user")
-    localStorage.removeItem("token")
-
-    // Redirecionar para página de login
-    router.push("/login")
-
-    // Opcional: mostrar toast de confirmação
-    // toast({ title: "Logout realizado", description: "Você foi desconectado com sucesso." })
-  }
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error('Erro no logout:', error);
+      // Mesmo com erro, redirecionar para login
+      router.push("/login" as any);
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6 backdrop-blur-sm">
       <Sheet>
         <SheetTrigger asChild>
-          <Button variant="outline" size="icon" className="shrink-0 md:hidden bg-transparent">
+          <Button
+            variant="outline"
+            size="icon"
+            className="shrink-0 md:hidden bg-transparent"
+          >
             <Menu className="h-5 w-5" />
             <span className="sr-only">Toggle navigation menu</span>
           </Button>
@@ -132,7 +147,9 @@ export function Header() {
       </Sheet>
 
       <div className="w-full flex-1">
-        <h1 className="text-lg font-semibold md:text-2xl">Sistema de Documentos</h1>
+        <h1 className="text-lg font-semibold md:text-2xl">
+          Sistema de Documentos
+        </h1>
       </div>
 
       <div className="flex items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
@@ -154,19 +171,25 @@ export function Header() {
             <DropdownMenuItem>
               <div className="flex flex-col gap-1">
                 <p className="text-sm font-medium">Novo documento adicionado</p>
-                <p className="text-xs text-muted-foreground">Lei Municipal 123/2024 foi publicada</p>
+                <p className="text-xs text-muted-foreground">
+                  Lei Municipal 123/2024 foi publicada
+                </p>
               </div>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <div className="flex flex-col gap-1">
                 <p className="text-sm font-medium">Upload concluído</p>
-                <p className="text-xs text-muted-foreground">5 documentos processados com sucesso</p>
+                <p className="text-xs text-muted-foreground">
+                  5 documentos processados com sucesso
+                </p>
               </div>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <div className="flex flex-col gap-1">
                 <p className="text-sm font-medium">Análise IA disponível</p>
-                <p className="text-xs text-muted-foreground">Relatório de contratos foi analisado</p>
+                <p className="text-xs text-muted-foreground">
+                  Relatório de contratos foi analisado
+                </p>
               </div>
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -174,31 +197,46 @@ export function Header() {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="relative z-10">
-              <User className="h-4 w-4" />
+            <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+              <Avatar className="h-8 w-8">
+                <AvatarImage src={user?.avatar} alt={user?.name} />
+                <AvatarFallback>
+                  {user?.name ? user.name.split(' ').map(n => n[0]).join('').toUpperCase() : 'U'}
+                </AvatarFallback>
+              </Avatar>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56 z-[100]">
-            <DropdownMenuLabel>João Silva</DropdownMenuLabel>
-            <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">Administrador</DropdownMenuLabel>
+            <DropdownMenuLabel>
+              {user?.name || 'Usuário'}
+            </DropdownMenuLabel>
+            <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
+              {user?.role === 'admin' ? 'Administrador' : 
+               user?.role === 'editor' ? 'Editor' : 'Visualizador'}
+            </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
               <Link href="/perfil" className="cursor-pointer">
+                <User className="mr-2 h-4 w-4" />
                 Perfil
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="/configuracoes" className="cursor-pointer">
-                Configurações
-              </Link>
-            </DropdownMenuItem>
+            {isAdmin && (
+              <DropdownMenuItem asChild>
+                <Link href="/configuracoes" className="cursor-pointer">
+                  <Settings className="mr-2 h-4 w-4" />
+                  Configurações
+                </Link>
+              </DropdownMenuItem>
+            )}
             <DropdownMenuSeparator />
             <DropdownMenuItem className="cursor-pointer" onClick={handleLogout}>
+              <LogOut className="mr-2 h-4 w-4" />
               Sair
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
     </header>
-  )
+  );
 }
