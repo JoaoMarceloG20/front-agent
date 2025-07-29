@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Collapsible, CollapsibleContent } from "@/components/ui/collapsible";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   Dialog,
   DialogContent,
@@ -41,8 +42,11 @@ import {
   AlertCircle,
   ChevronLeft,
   ChevronRight,
+  Download,
+  RefreshCw,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Loading, LoadingOverlay } from "@/components/ui/loading";
 import { useToast } from "@/hooks/use-toast";
 import { useErrorHandler } from "@/components/error-boundary";
 import { useDocumentSearchMutation } from '@/lib/hooks/use-documents-query'

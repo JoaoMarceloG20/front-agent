@@ -119,7 +119,7 @@ export function UsersManager() {
     }
   }, [usersError, handleError]);
 
-  const users = usersResponse?.items || [];
+const users = usersResponse?.items || [];
   const totalUsers = usersResponse?.total || 0;
 
   // Filter users (additional client-side filtering if needed)
