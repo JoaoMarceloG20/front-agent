@@ -3,7 +3,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 // Create axios instance with base configuration
 const createApiClient = (): AxiosInstance => {
   const client = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',
+    baseURL: `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1`,
     timeout: 30000, // 30 seconds
     headers: {
       'Content-Type': 'application/json',
@@ -15,7 +15,7 @@ const createApiClient = (): AxiosInstance => {
     (config) => {
       // Get token from localStorage or cookies
       if (typeof window !== 'undefined') {
-        const token = localStorage.getItem(process.env.NEXT_PUBLIC_TOKEN_KEY || 'prefeitura_auth_token');
+        const token = localStorage.getItem(process.env.NEXT_PUBLIC_TOKEN_KEY || 'ali_auth_token');
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
         }
@@ -48,7 +48,7 @@ const createApiClient = (): AxiosInstance => {
             });
 
             const { access_token } = response.data;
-            localStorage.setItem(process.env.NEXT_PUBLIC_TOKEN_KEY || 'prefeitura_auth_token', access_token);
+            localStorage.setItem(process.env.NEXT_PUBLIC_TOKEN_KEY || 'ali_auth_token', access_token);
 
             // Retry original request with new token
             originalRequest.headers.Authorization = `Bearer ${access_token}`;
@@ -56,7 +56,7 @@ const createApiClient = (): AxiosInstance => {
           }
         } catch (refreshError) {
           // Refresh failed, redirect to login
-          localStorage.removeItem(process.env.NEXT_PUBLIC_TOKEN_KEY || 'prefeitura_auth_token');
+          localStorage.removeItem(process.env.NEXT_PUBLIC_TOKEN_KEY || 'ali_auth_token');
           localStorage.removeItem('refresh_token');
           window.location.href = '/login';
           return Promise.reject(refreshError);
@@ -95,7 +95,7 @@ export const apiClient = createApiClient();
 // Helper function for file uploads
 export const createFileUploadClient = (): AxiosInstance => {
   const client = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',
+    baseURL: `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1`,
     timeout: 300000, // 5 minutes for file uploads
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -106,7 +106,7 @@ export const createFileUploadClient = (): AxiosInstance => {
   client.interceptors.request.use(
     (config) => {
       if (typeof window !== 'undefined') {
-        const token = localStorage.getItem(process.env.NEXT_PUBLIC_TOKEN_KEY || 'prefeitura_auth_token');
+        const token = localStorage.getItem(process.env.NEXT_PUBLIC_TOKEN_KEY || 'ali_auth_token');
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
         }

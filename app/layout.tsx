@@ -99,11 +99,8 @@ export default function RootLayout({
           <AuthProvider>
             <ErrorBoundary>
               <div className="min-h-screen bg-background">
-                <SidebarProvider defaultOpen={true}>
                   <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
-                    <AppSidebar />
                     <div className="flex flex-col overflow-hidden">
-                      <Header />
                       <main
                         className="flex-1 gap-4 p-4 lg:gap-6 lg:p-6 overflow-auto"
                         role="main"
@@ -114,7 +111,6 @@ export default function RootLayout({
                     </div>
                   </div>
                   <Toaster />
-                </SidebarProvider>
               </div>
             </ErrorBoundary>
           </AuthProvider>

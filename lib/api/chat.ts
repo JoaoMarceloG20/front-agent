@@ -143,4 +143,74 @@ export const chatApi = {
     });
     return response.data;
   },
+
+  // Stream chat messages (for real-time responses)
+  streamMessage: async (
+    request: ChatRequest,
+    onChunk: (chunk: any) => void,
+    onError?: (error: Error) => void,
+    onComplete?: () => void
+  ): Promise<void> => {
+    try {
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const token = typeof window !== 'undefined' 
+        ? localStorage.getItem(process.env.NEXT_PUBLIC_TOKEN_KEY || 'ali_auth_token')
+        : null;
+
+      const response = await fetch(`${API_BASE_URL}/api/v1/chat/stream`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
+        body: JSON.stringify(request),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Stream request failed: ${response.statusText}`);
+      }
+
+      const reader = response.body?.getReader();
+      if (!reader) {
+        throw new Error('Response body is not readable');
+      }
+
+      const decoder = new TextDecoder();
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value);
+        const lines = chunk.split('\n');
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            const data = line.slice(6);
+            if (data === '[DONE]') {
+              onComplete?.();
+              return;
+            }
+            
+            try {
+              const parsed = JSON.parse(data);
+              onChunk(parsed);
+            } catch (e) {
+              console.warn('Failed to parse chunk:', data);
+            }
+          }
+        }
+      }
+      
+      onComplete?.();
+    } catch (error) {
+      console.error('Stream error:', error);
+      onError?.(error as Error);
+    }
+  },
+
+  // Check if streaming is supported/enabled
+  isStreamingEnabled: (): boolean => {
+    return process.env.NEXT_PUBLIC_CHAT_STREAM_ENABLED === 'true';
+  },
 };

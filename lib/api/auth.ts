@@ -9,7 +9,7 @@ export const authApi = {
     
     // Store tokens in localStorage
     if (data.access_token) {
-      localStorage.setItem(process.env.NEXT_PUBLIC_TOKEN_KEY || 'prefeitura_auth_token', data.access_token);
+      localStorage.setItem(process.env.NEXT_PUBLIC_TOKEN_KEY || 'ali_auth_token', data.access_token);
       if (data.refresh_token) {
         localStorage.setItem('refresh_token', data.refresh_token);
       }
@@ -35,7 +35,7 @@ export const authApi = {
       console.warn('Logout request failed:', error);
     } finally {
       // Clear local storage
-      localStorage.removeItem(process.env.NEXT_PUBLIC_TOKEN_KEY || 'prefeitura_auth_token');
+      localStorage.removeItem(process.env.NEXT_PUBLIC_TOKEN_KEY || 'ali_auth_token');
       localStorage.removeItem('refresh_token');
       localStorage.removeItem('user');
     }
@@ -65,7 +65,7 @@ export const authApi = {
 
     const data = response.data;
     if (data.access_token) {
-      localStorage.setItem(process.env.NEXT_PUBLIC_TOKEN_KEY || 'prefeitura_auth_token', data.access_token);
+      localStorage.setItem(process.env.NEXT_PUBLIC_TOKEN_KEY || 'ali_auth_token', data.access_token);
     }
 
     return data;
@@ -89,7 +89,7 @@ export const authApi = {
   // Check if user is authenticated (client-side)
   isAuthenticated: (): boolean => {
     if (typeof window === 'undefined') return false;
-    const token = localStorage.getItem(process.env.NEXT_PUBLIC_TOKEN_KEY || 'prefeitura_auth_token');
+    const token = localStorage.getItem(process.env.NEXT_PUBLIC_TOKEN_KEY || 'ali_auth_token');
     return !!token;
   },
 
@@ -109,6 +109,6 @@ export const authApi = {
   // Get current token
   getToken: (): string | null => {
     if (typeof window === 'undefined') return null;
-    return localStorage.getItem(process.env.NEXT_PUBLIC_TOKEN_KEY || 'prefeitura_auth_token');
+    return localStorage.getItem(process.env.NEXT_PUBLIC_TOKEN_KEY || 'ali_auth_token');
   },
 };
