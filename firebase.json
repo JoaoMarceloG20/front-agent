@@ -1,4 +1,3 @@
-
 {
   "hosting": {
     "public": "out",
@@ -11,7 +10,7 @@
       {
         "source": "/api/v1/**",
         "run": {
-          "serviceId": "ali-app-97976",
+          "serviceId": "ali-api-production",
           "region": "us-central1"
         }
       },
