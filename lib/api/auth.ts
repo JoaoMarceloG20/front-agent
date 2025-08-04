@@ -1,20 +1,9 @@
 import { apiClient } from './client';
 import { LoginRequest, LoginResponse, RegisterRequest, User } from './types';
-import { mockApi, MOCK_MODE } from './mock';
 
 export const authApi = {
   // Login user
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
-    if (MOCK_MODE) {
-      const data = await mockApi.login(credentials.email, credentials.password);
-      
-      // Store tokens in localStorage
-      localStorage.setItem(process.env.NEXT_PUBLIC_TOKEN_KEY || 'ali_auth_token', data.access_token);
-      localStorage.setItem('user', JSON.stringify(data.user));
-      
-      return data;
-    }
-    
     const response = await apiClient.post('/auth/login', credentials);
     const data = response.data;
     

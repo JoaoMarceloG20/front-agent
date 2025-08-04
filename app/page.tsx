@@ -8,7 +8,6 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { formatDistanceToNow } from "date-fns"
 import { ptBR } from "date-fns/locale"
 import { ViewerRoute } from "@/components/auth/protected-route"
-import ApiTest from "@/components/api-test"
 
 export default function Dashboard() {
   const { data: stats, isLoading: statsLoading, error: statsError } = useDashboardStats();
@@ -155,13 +154,6 @@ export default function Dashboard() {
           </CardContent>
         </Card>
       </div>
-      
-      {/* API Test Component - Only in development */}
-      {process.env.NODE_ENV === 'development' && (
-        <div className="mt-8">
-          <ApiTest />
-        </div>
-      )}
       </div>
     </ViewerRoute>
   )

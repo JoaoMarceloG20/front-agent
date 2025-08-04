@@ -1,22 +1,15 @@
 import { apiClient } from './client';
 import { DashboardStats, ActivityItem } from './types';
-import { mockApi, MOCK_MODE } from './mock';
 
 export const dashboardApi = {
   // Get dashboard statistics
   getStats: async (): Promise<DashboardStats> => {
-    if (MOCK_MODE) {
-      return await mockApi.getStats();
-    }
     const response = await apiClient.get('/dashboard/stats');
     return response.data;
   },
 
   // Get recent activity
   getRecentActivity: async (limit: number = 10): Promise<ActivityItem[]> => {
-    if (MOCK_MODE) {
-      return await mockApi.getRecentActivity();
-    }
     const response = await apiClient.get('/dashboard/activity', {
       params: { limit },
     });
@@ -74,9 +67,6 @@ export const dashboardApi = {
     last_backup: string;
     active_users: number;
   }> => {
-    if (MOCK_MODE) {
-      return await mockApi.getSystemHealth();
-    }
     const response = await apiClient.get('/dashboard/system-health');
     return response.data;
   },
