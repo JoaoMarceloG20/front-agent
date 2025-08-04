@@ -17,7 +17,7 @@ import { useRole } from "@/lib/providers/auth-provider";
 const menuItems = [
   {
     title: "Dashboard",
-    url: "/" as const,
+    url: "/dashboard" as const,
     icon: BarChart3,
   },
   {

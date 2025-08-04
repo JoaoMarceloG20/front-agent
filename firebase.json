@@ -1,3 +1,4 @@
+
 {
   "hosting": {
     "public": "out",
@@ -8,19 +9,15 @@
     ],
     "rewrites": [
       {
+        "source": "/api/v1/**",
+        "run": {
+          "serviceId": "ali-app-97976",
+          "region": "us-central1"
+        }
+      },
+      {
         "source": "**",
         "destination": "/index.html"
-      }
-    ],
-    "headers": [
-      {
-        "source": "**/*.@(js|css)",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "max-age=31536000"
-          }
-        ]
       }
     ]
   }

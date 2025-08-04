@@ -37,7 +37,7 @@ export function LoginForm() {
   // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
-      const redirectTo = searchParams.get('redirect') || '/';
+      const redirectTo = searchParams.get('redirect') || '/dashboard';
       router.push(redirectTo as any);
     }
   }, [isAuthenticated, router, searchParams]);
@@ -72,7 +72,7 @@ export function LoginForm() {
       });
   
       // Redirect to intended page or dashboard
-      const redirectTo = searchParams.get('redirect') || '/';
+      const redirectTo = searchParams.get('redirect') || '/dashboard';
       router.push(redirectTo as any);
     } catch (error: any) {
       console.error("Erro no login:", error);
