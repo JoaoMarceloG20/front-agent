@@ -189,7 +189,7 @@ export async function checkApiHealth(): Promise<{
   error?: string;
 }> {
   try {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://ali-api-production-459480858531.us-central1.run.app';
     
     const response = await fetch(`${API_BASE_URL}/health`, {
       method: 'GET',

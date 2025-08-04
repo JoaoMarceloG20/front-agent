@@ -4,7 +4,7 @@ import axios, { AxiosInstance,
 // Create axios instance with base configuration
 const createApiClient = (): AxiosInstance => {
   const client = axios.create({
-    baseURL: `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1`,
+    baseURL: `${process.env.NEXT_PUBLIC_API_URL || 'https://ali-api-production-459480858531.us-central1.run.app'}/api/v1`,
     timeout: 30000, // 30 seconds
     headers: {
       'Content-Type': 'application/json',
@@ -96,7 +96,7 @@ export const apiClient = createApiClient();
 // Helper function for file uploads
 export const createFileUploadClient = (): AxiosInstance => {
   const client = axios.create({
-    baseURL: `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1`,
+    baseURL: `${process.env.NEXT_PUBLIC_API_URL || 'https://ali-api-production-459480858531.us-central1.run.app'}/api/v1`,
     timeout: 300000, // 5 minutes for file uploads
     headers: {
       'Content-Type': 'multipart/form-data',
