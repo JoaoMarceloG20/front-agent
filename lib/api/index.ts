@@ -5,14 +5,13 @@ export { usersApi } from './users';
 export { chatApi } from './chat';
 export { dashboardApi } from './dashboard';
 export { settingsApi } from './settings';
-export { healthApi } from './health';
 
 // Export API client and types
 export { apiClient, fileUploadClient } from './client';
 export * from './types';
 
-// Export utilities
-export * from '../utils/error-handler';
+// Export utilities (commented out to avoid build issues)
+// export * from '../utils/error-handler';
 
 // Re-export commonly used types
 export type { CreateUserRequest, UpdateUserRequest, UserFilters } from './users';
@@ -67,12 +66,6 @@ export const API_ENDPOINTS = {
     RATE: (messageId: number) => `/chat/messages/${messageId}/rate`,
     STATS: '/chat/stats',
     STREAM: '/chat/stream',
-  },
-  HEALTH: {
-    BASE: '/health',
-    SERVICE: (service: string) => `/health/${service}`,
-    METRICS: '/health/metrics',
-    PING: '/ping',
   },
   DASHBOARD: {
     STATS: '/dashboard/stats',

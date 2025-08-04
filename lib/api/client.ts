@@ -1,4 +1,5 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosInstance,
+  AxiosRequestConfig, AxiosResponse } from 'axios';
 
 // Create axios instance with base configuration
 const createApiClient = (): AxiosInstance => {
