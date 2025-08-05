@@ -15,20 +15,42 @@ export const dashboardApi = {
       return {
         total_users: 0, // Not available in current API
         total_documents: docStats.data.total_documents || 0,
-        active_users: 0, // Not available in current API
-        storage_used: docStats.data.total_size || 0,
-        total_conversations: chatMetrics.data.total_conversations || 0,
-        total_messages: chatMetrics.data.total_messages || 0,
+        searches_performed: 0, // Not available in current API
+        documents_processed: docStats.data.total_documents || 0,
+        ai_success_rate: 0.95, // Mock value
+        recent_activity: [], // Will be populated by getRecentActivity
+        documents_by_type: {
+          'Lei': 0,
+          'Decreto': 0,
+          'Contrato': 0,
+          'Portaria': 0,
+          'Resolução': 0,
+          'Instrução Normativa': 0,
+          'Parecer': 0,
+          'Ofício': 0,
+        },
+        documents_by_category: {},
       };
     } catch (error) {
       // Fallback to mock data if endpoints fail
       return {
         total_users: 0,
         total_documents: 0,
-        active_users: 0,
-        storage_used: 0,
-        total_conversations: 0,
-        total_messages: 0,
+        searches_performed: 0,
+        documents_processed: 0,
+        ai_success_rate: 0.95,
+        recent_activity: [],
+        documents_by_type: {
+          'Lei': 0,
+          'Decreto': 0,
+          'Contrato': 0,
+          'Portaria': 0,
+          'Resolução': 0,
+          'Instrução Normativa': 0,
+          'Parecer': 0,
+          'Ofício': 0,
+        },
+        documents_by_category: {},
       };
     }
   },

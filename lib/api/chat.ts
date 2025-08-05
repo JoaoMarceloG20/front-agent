@@ -1,15 +1,21 @@
 import { apiClient } from './client';
-import {
-  ChatMessage,
-  ChatConversation,
-  ChatRequest,
+import { mockApi, MOCK_MODE } from './mock';
+import type { 
+  ChatMessage, 
+  ChatConversation, 
+  ChatRequest, 
   ChatResponse,
   PaginatedResponse,
+  BaseQueryParams
 } from './types';
 
 export const chatApi = {
-  // Send message to AI
+  // Send a message to the chatbot
   sendMessage: async (request: ChatRequest): Promise<ChatResponse> => {
+    if (MOCK_MODE) {
+      return await mockApi.sendMessage(request);
+    }
+    
     const response = await apiClient.post('/chatbot/chat', request);
     return response.data;
   },
@@ -19,7 +25,10 @@ export const chatApi = {
     page?: number;
     limit?: number;
   }): Promise<PaginatedResponse<ChatConversation>> => {
-    const response = await apiClient.get('/chatbot/history', { params });
+    if (MOCK_MODE) {
+      return await mockApi.getConversations(params);
+    }
+    const response = await apiClient.post('/chatbot/history', params || {});
     return response.data;
   },
 
@@ -28,12 +37,18 @@ export const chatApi = {
     conversation: ChatConversation;
     messages: ChatMessage[];
   }> => {
+    if (MOCK_MODE) {
+      return await mockApi.getConversation(conversationId);
+    }
     const response = await apiClient.get(`/chatbot/messages`);
     return response.data;
   },
 
   // Create new conversation
   createConversation: async (title?: string): Promise<ChatConversation> => {
+    if (MOCK_MODE) {
+      return await mockApi.createConversation(title || 'Nova Conversa');
+    }
     const response = await apiClient.post('/auth/session', {
       title: title || 'Nova Conversa',
     });
@@ -45,12 +60,18 @@ export const chatApi = {
     conversationId: number,
     updates: { title?: string }
   ): Promise<ChatConversation> => {
+    if (MOCK_MODE) {
+      return await mockApi.updateConversation(conversationId, updates);
+    }
     const response = await apiClient.patch(`/auth/session/${conversationId}/name`, updates);
     return response.data;
   },
 
   // Delete conversation
   deleteConversation: async (conversationId: number): Promise<void> => {
+    if (MOCK_MODE) {
+      return await mockApi.deleteConversation(conversationId);
+    }
     await apiClient.delete(`/auth/session/${conversationId}`);
   },
 
@@ -59,6 +80,9 @@ export const chatApi = {
     conversationId: number,
     params?: { page?: number; limit?: number }
   ): Promise<PaginatedResponse<ChatMessage>> => {
+    if (MOCK_MODE) {
+      return await mockApi.getMessages(conversationId, params);
+    }
     const response = await apiClient.get(`/chatbot/messages`, {
       params,
     });
@@ -67,6 +91,9 @@ export const chatApi = {
 
   // Delete message
   deleteMessage: async (messageId: number): Promise<void> => {
+    if (MOCK_MODE) {
+      return await mockApi.deleteMessage(messageId);
+    }
     await apiClient.delete(`/chatbot/messages/${messageId}`);
   },
 
@@ -78,6 +105,9 @@ export const chatApi = {
     avg_messages_per_conversation: number;
     most_discussed_topics: Array<{ topic: string; count: number }>;
   }> => {
+    if (MOCK_MODE) {
+      return await mockApi.getChatStats();
+    }
     const response = await apiClient.get('/chatbot/metrics');
     return response.data;
   },
@@ -94,8 +124,11 @@ export const chatApi = {
     conversations: ChatConversation[];
     total: number;
   }> => {
-    const response = await apiClient.get('/chatbot/search', {
-      params: { query, ...params },
+    if (MOCK_MODE) {
+      return await mockApi.searchChats(query, params);
+    }
+    const response = await apiClient.post('/chatbot/search', {
+      query, ...params
     });
     return response.data;
   },
@@ -109,6 +142,9 @@ export const chatApi = {
     success_rate: number;
     last_update: string;
   }> => {
+    if (MOCK_MODE) {
+      return await mockApi.getAIStatus();
+    }
     const response = await apiClient.get('/chatbot/insights');
     return response.data;
   },
@@ -118,9 +154,14 @@ export const chatApi = {
     conversationId: number,
     format: 'txt' | 'pdf' | 'json' = 'txt'
   ): Promise<Blob> => {
-    const response = await apiClient.get(`/chatbot/export`, {
-      params: { format },
-      responseType: 'blob',
+    if (MOCK_MODE) {
+      return await mockApi.exportConversation(conversationId, format);
+    }
+    const response = await apiClient.post('/chatbot/export', {
+      conversation_id: conversationId,
+      format
+    }, {
+      responseType: 'blob'
     });
     return response.data;
   },

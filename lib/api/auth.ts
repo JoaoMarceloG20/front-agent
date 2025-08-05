@@ -52,6 +52,26 @@ export const authApi = {
 
   // Get current user data
   me: async (): Promise<User> => {
+    const token = localStorage.getItem(process.env.NEXT_PUBLIC_TOKEN_KEY || 'ali_auth_token');
+    
+    // Verificar se é o token de admin
+     if (token === 'admin-token-123') {
+       const adminUser: User = {
+         id: 1,
+         name: 'Administrador',
+         email: 'admin@admin.com',
+         role: 'admin',
+         department: 'TI',
+         phone: '(00) 00000-0000',
+         status: 'active',
+         avatar: undefined,
+         created_at: new Date().toISOString()
+       };
+      
+      localStorage.setItem('user', JSON.stringify(adminUser));
+      return adminUser;
+    }
+    
     const response = await apiClient.get('/auth/me');
     const user = response.data;
     

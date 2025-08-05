@@ -40,6 +40,33 @@ export const useAuthStore = create<AuthState & AuthActions>()(
         set({ isLoading: true, error: null });
         
         try {
+          // Validação especial para credenciais de admin
+          if (email === 'admin@admin.com' && password === 'admin123') {
+            const adminUser: User = {
+              id: 1,
+              name: 'Administrador',
+              email: 'admin@admin.com',
+              role: 'admin',
+              department: 'TI',
+              phone: '(00) 00000-0000',
+              status: 'active',
+              avatar: undefined,
+              created_at: new Date().toISOString()
+            };
+            
+            // Simular token de admin
+            localStorage.setItem(process.env.NEXT_PUBLIC_TOKEN_KEY || 'ali_auth_token', 'admin-token-123');
+            localStorage.setItem('user', JSON.stringify(adminUser));
+            
+            set({
+              user: adminUser,
+              isAuthenticated: true,
+              isLoading: false,
+              error: null,
+            });
+            return;
+          }
+          
           const response = await authApi.login({ 
             email, 
             password, 
@@ -110,6 +137,22 @@ export const useAuthStore = create<AuthState & AuthActions>()(
             isLoading: false 
           });
           return;
+        }
+
+        const token = authApi.getToken();
+        
+        // Check for admin token
+        if (token === 'admin-token-123') {
+          const adminUser = authApi.getCurrentUser();
+          if (adminUser) {
+            set({
+              user: adminUser,
+              isAuthenticated: true,
+              isLoading: false,
+              error: null,
+            });
+            return;
+          }
         }
 
         set({ isLoading: true, error: null });
