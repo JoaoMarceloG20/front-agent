@@ -4,7 +4,16 @@ import { LoginRequest, LoginResponse, RegisterRequest, User } from './types';
 export const authApi = {
   // Login user
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
-    const response = await apiClient.post('/auth/login', credentials);
+    const formData = new URLSearchParams();
+    formData.append('username', credentials.email);
+    formData.append('password', credentials.password);
+    formData.append('grant_type', 'password');
+    
+    const response = await apiClient.post('/auth/login', formData, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
     const data = response.data;
     
     // Store tokens in localStorage

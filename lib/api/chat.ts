@@ -10,7 +10,7 @@ import {
 export const chatApi = {
   // Send message to AI
   sendMessage: async (request: ChatRequest): Promise<ChatResponse> => {
-    const response = await apiClient.post('/chat', request);
+    const response = await apiClient.post('/chatbot/chat', request);
     return response.data;
   },
 
@@ -19,7 +19,7 @@ export const chatApi = {
     page?: number;
     limit?: number;
   }): Promise<PaginatedResponse<ChatConversation>> => {
-    const response = await apiClient.get('/chat/history', { params });
+    const response = await apiClient.get('/chatbot/history', { params });
     return response.data;
   },
 
@@ -28,13 +28,13 @@ export const chatApi = {
     conversation: ChatConversation;
     messages: ChatMessage[];
   }> => {
-    const response = await apiClient.get(`/chat/${conversationId}`);
+    const response = await apiClient.get(`/chatbot/messages`);
     return response.data;
   },
 
   // Create new conversation
   createConversation: async (title?: string): Promise<ChatConversation> => {
-    const response = await apiClient.post('/chat/conversations', {
+    const response = await apiClient.post('/auth/session', {
       title: title || 'Nova Conversa',
     });
     return response.data;
@@ -45,13 +45,13 @@ export const chatApi = {
     conversationId: number,
     updates: { title?: string }
   ): Promise<ChatConversation> => {
-    const response = await apiClient.put(`/chat/conversations/${conversationId}`, updates);
+    const response = await apiClient.patch(`/auth/session/${conversationId}/name`, updates);
     return response.data;
   },
 
   // Delete conversation
   deleteConversation: async (conversationId: number): Promise<void> => {
-    await apiClient.delete(`/chat/conversations/${conversationId}`);
+    await apiClient.delete(`/auth/session/${conversationId}`);
   },
 
   // Get messages from conversation
@@ -59,7 +59,7 @@ export const chatApi = {
     conversationId: number,
     params?: { page?: number; limit?: number }
   ): Promise<PaginatedResponse<ChatMessage>> => {
-    const response = await apiClient.get(`/chat/conversations/${conversationId}/messages`, {
+    const response = await apiClient.get(`/chatbot/messages`, {
       params,
     });
     return response.data;
@@ -67,7 +67,7 @@ export const chatApi = {
 
   // Delete message
   deleteMessage: async (messageId: number): Promise<void> => {
-    await apiClient.delete(`/chat/messages/${messageId}`);
+    await apiClient.delete(`/chatbot/messages/${messageId}`);
   },
 
   // Get conversation statistics
@@ -78,7 +78,7 @@ export const chatApi = {
     avg_messages_per_conversation: number;
     most_discussed_topics: Array<{ topic: string; count: number }>;
   }> => {
-    const response = await apiClient.get('/chat/stats');
+    const response = await apiClient.get('/chatbot/metrics');
     return response.data;
   },
 
@@ -94,7 +94,7 @@ export const chatApi = {
     conversations: ChatConversation[];
     total: number;
   }> => {
-    const response = await apiClient.get('/chat/search', {
+    const response = await apiClient.get('/chatbot/search', {
       params: { query, ...params },
     });
     return response.data;
@@ -109,7 +109,7 @@ export const chatApi = {
     success_rate: number;
     last_update: string;
   }> => {
-    const response = await apiClient.get('/chat/ai-status');
+    const response = await apiClient.get('/chatbot/insights');
     return response.data;
   },
 
@@ -118,7 +118,7 @@ export const chatApi = {
     conversationId: number,
     format: 'txt' | 'pdf' | 'json' = 'txt'
   ): Promise<Blob> => {
-    const response = await apiClient.get(`/chat/conversations/${conversationId}/export`, {
+    const response = await apiClient.get(`/chatbot/export`, {
       params: { format },
       responseType: 'blob',
     });
@@ -127,8 +127,8 @@ export const chatApi = {
 
   // Regenerate AI response
   regenerateResponse: async (messageId: number): Promise<ChatMessage> => {
-    const response = await apiClient.post(`/chat/messages/${messageId}/regenerate`);
-    return response.data;
+    // Note: API doesn't have regenerate endpoint, would need to resend message
+    throw new Error('Regenerate not supported by this API');
   },
 
   // Rate AI response (feedback)
@@ -137,11 +137,8 @@ export const chatApi = {
     rating: 'positive' | 'negative',
     feedback?: string
   ): Promise<{ message: string }> => {
-    const response = await apiClient.post(`/chat/messages/${messageId}/rate`, {
-      rating,
-      feedback,
-    });
-    return response.data;
+    // Note: API doesn't have rating endpoint
+    throw new Error('Rating not supported by this API');
   },
 
   // Stream chat messages (for real-time responses)
@@ -157,7 +154,7 @@ export const chatApi = {
         ? localStorage.getItem(process.env.NEXT_PUBLIC_TOKEN_KEY || 'ali_auth_token')
         : null;
 
-      const response = await fetch(`${API_BASE_URL}/api/v1/chat/stream`, {
+      const response = await fetch(`${API_BASE_URL}/api/v1/chatbot/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -191,7 +191,7 @@ export async function checkApiHealth(): Promise<{
   try {
     const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://ali-api-production-459480858531.us-central1.run.app';
     
-    const response = await fetch(`${API_BASE_URL}/health`, {
+    const response = await fetch(`${API_BASE_URL}/api/v1/health`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

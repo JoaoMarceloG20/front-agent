@@ -55,17 +55,17 @@ export const API_ENDPOINTS = {
     BY_DEPARTMENT: (dept: string) => `/users/department/${encodeURIComponent(dept)}`,
   },
   CHAT: {
-    BASE: '/chat',
-    HISTORY: '/chat/history',
-    CONVERSATIONS: '/chat/conversations',
-    MESSAGES: (conversationId: number) => `/chat/conversations/${conversationId}/messages`,
-    SEARCH: '/chat/search',
-    AI_STATUS: '/chat/ai-status',
-    EXPORT: (conversationId: number) => `/chat/conversations/${conversationId}/export`,
-    REGENERATE: (messageId: number) => `/chat/messages/${messageId}/regenerate`,
-    RATE: (messageId: number) => `/chat/messages/${messageId}/rate`,
-    STATS: '/chat/stats',
-    STREAM: '/chat/stream',
+    BASE: '/chatbot/chat',
+    HISTORY: '/chatbot/history',
+    CONVERSATIONS: '/auth/session',
+    MESSAGES: '/chatbot/messages',
+    SEARCH: '/chatbot/search',
+    AI_STATUS: '/chatbot/insights',
+    EXPORT: '/chatbot/export',
+    REGENERATE: '/chatbot/chat', // API doesn't support regenerate
+    RATE: '/chatbot/chat', // API doesn't support rating
+    STATS: '/chatbot/metrics',
+    STREAM: '/chatbot/chat',
   },
   DASHBOARD: {
     STATS: '/dashboard/stats',
